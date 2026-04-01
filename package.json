@@ -1,28 +1,45 @@
-{
-  "name": "skincare-app",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "lucide-react": "^0.263.1",
-    "framer-motion": "^10.12.16",
-    "clsx": "^1.2.1",
-    "tailwind-merge": "^1.13.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.15",
-    "@types/react-dom": "^18.2.7",
-    "@vitejs/plugin-react": "^4.0.3",
-    "autoprefixer": "^10.4.14",
-    "postcss": "^8.4.27",
-    "tailwindcss": "^3.3.3",
-    "vite": "^4.4.5"
-  }
+import { useState } from "react";
+import { Sun, Moon, Leaf, AlertTriangle } from "lucide-react";
+
+export default function App() {
+  const [step, setStep] = useState(1);
+  const [owned, setOwned] = useState(new Set());
+
+  const PRODUCTS = [
+    { id: 1, brand: "The Ordinary", name: "Squalane Cleanser", usage: "AM/PM" },
+    { id: 2, brand: "Paula's Choice", name: "BHA Liquid Exfoliant", usage: "AM/PM" },
+    { id: 3, brand: "Supergoop!", name: "Unseen Sunscreen SPF 40", usage: "AM" }
+  ];
+
+  const toggle = (id) => {
+    const s = new Set(owned);
+    s.has(id) ? s.delete(id) : s.add(id);
+    setOwned(s);
+  };
+
+  return (
+    <div style={{ padding: "40px", fontFamily: "sans-serif", textAlign: "center", backgroundColor: "#F8F6F1", minHeight: "100vh" }}>
+      <Leaf color="#4F7942" size={32} />
+      <h1 style={{ color: "#2D3030" }}>Zen Skincare Garden</h1>
+      
+      {step === 1 ? (
+        <div style={{ background: "white", padding: "20px", borderRadius: "15px", maxWidth: "400px", margin: "0 auto", border: "1px solid #E5E2DA" }}>
+          <h2 style={{ fontSize: "18px" }}>Select your products:</h2>
+          {PRODUCTS.map(p => (
+            <div key={p.id} onClick={() => toggle(p.id)} style={{ padding: "10px", margin: "10px 0", border: "1px solid", borderRadius: "8px", cursor: "pointer", borderColor: owned.has(p.id) ? "#4F7942" : "#E5E2DA", background: owned.has(p.id) ? "#EDF3EB" : "transparent" }}>
+              <strong>{p.brand}</strong> - {p.name}
+            </div>
+          ))}
+          <button onClick={() => setStep(2)} style={{ marginTop: "20px", padding: "10px 20px", background: "#4F7942", color: "white", border: "none", borderRadius: "8px", cursor: "pointer" }}>
+            Build My Routine
+          </button>
+        </div>
+      ) : (
+        <div>
+          <p>Your routine is ready! (This is a preview)</p>
+          <button onClick={() => setStep(1)}>Back</button>
+        </div>
+      )}
+    </div>
+  );
 }
